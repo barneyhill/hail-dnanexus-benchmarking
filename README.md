@@ -1,5 +1,5 @@
 # Benchmarking
-## Spark Jupyter w/ 2x mem3_hdd2_v2_x4
+## Spark Jupyter w/ 2x mem3_ssd1_v2_x4
 
 ```
 bn_ds = hl.balding_nichols_model(3, 100000, 1000000)
@@ -14,7 +14,7 @@ grm = hl.genetic_relatedness_matrix(bn_ds.GT)
 ```
 Over 5 runs average: 8.93s
 
-## hail-minimal w/ mem3_hdd2_v2_x8
+## hail-minimal w/ mem3_ssd1_v2_x8
 
 ```
 bn_ds = hl.balding_nichols_model(3, 100000, 1000000)
