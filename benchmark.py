@@ -3,19 +3,24 @@ import pyspark
 import dxpy
 import hail as hl
 
-my_database = dxpy.find_one_data_object(
-    name="my_database", 
-    project=dxpy.find_one_project()["id"]
-)["id"]
-database_dir = f'dnax://{my_database}'
-sc = pyspark.SparkContext()
-spark = pyspark.sql.SparkSession(sc)
-hl.init(sc=sc, tmp_dir=f'{database_dir}/tmp/')
+hl.init()
 
-t1 = time.time()
 hl.set_global_seed(1)
-bn_ds = hl.balding_nichols_model(3, 100000, 1000000)
-t1 = time.time()
-dataset = hl.sample_qc(bn_ds, name='sample_qc')
-dataset.show()
-print(time.time()-t1)
+
+times = []
+for _ in range(5):
+    bn_ds = hl.balding_nichols_model(3, 100000, 1000000)
+    t1 = time.time()
+    dataset = hl.sample_qc(bn_ds, name='sample_qc')
+    dataset.show()
+    times.append(time.time()-t1)
+print("benchmark 1", sum(times)/5)
+
+times = []
+for _ in range(5):
+    t1 = time.time()
+    bn_ds = hl.balding_nichols_model(3, 1000, 1000)
+    grm = hl.genetic_relatedness_matrix(bn_ds.GT)
+    times.append(time.time()-t1)
+
+print("benchmark 2", sum(times)/5)
